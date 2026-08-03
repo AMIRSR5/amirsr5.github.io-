@@ -74,7 +74,17 @@
     font-size:20px;
     letter-spacing:2px;
     color:#fff;
+    animation:logoFloat 4.5s ease-in-out infinite;
+    transition:transform .35s ease, opacity .35s ease;
   }
+  @keyframes logoFloat{
+    0%,100%{transform:translateY(0);}
+    50%{transform:translateY(-4px);}
+  }
+  header.scrolled .logo{transform:scale(.9);}
+  footer .logo{opacity:0; transform:translateY(18px); animation:none;
+    transition:opacity .8s ease, transform .8s ease;}
+  footer .logo.in{opacity:1; transform:translateY(0);}
   .logo span{color:var(--cyan); text-shadow:0 0 12px var(--cyan);}
   nav{display:flex; gap:28px;}
   nav a{
@@ -329,11 +339,13 @@
   }
   #splash.hide{opacity:0; visibility:hidden; pointer-events:none;}
   #splash .splash-logo{
-    width:min(58vw, 320px);
-    opacity:0; transform:scale(.9);
+    width:190px; height:190px;
+    object-fit:cover; object-position:center;
+    border-radius:50%;
+    border:1px solid rgba(3,232,224,.35);
+    opacity:0; transform:scale(.85);
     animation:splashIn 1s ease forwards .1s;
     filter:drop-shadow(0 0 26px rgba(3,232,224,.28));
-    border-radius:4px;
   }
   @keyframes splashIn{to{opacity:1; transform:scale(1);}}
   #splash .splash-loader{
@@ -364,7 +376,7 @@
 <div class="scanline"></div>
 
 <header>
-  <div class="logo">LU<span>M</span>ER</div>
+  <div class="logo" dir="ltr">LU<span>M</span>ER</div>
   <nav>
     <a href="#home">خانه</a>
     <a href="#about">درباره ما</a>
@@ -520,7 +532,10 @@
           <div class="icon-box">⌖</div>
           <div>
             <b>آدرس کارخانه</b>
-            <span>ماهدشت، شهرک صنعتی خوارزمی، خیابان دهم، جنب شرکت کمسان</span>
+            <span>ماهدشت، شهرک صنعتی خوارزمی، خیابان دهم، جنب شرکت کمسان</span><br>
+            <a href="https://nshn.ir/_bv_Q_ex2VWf" target="_blank" rel="noopener" class="link-cyan">مشاهده در نشان</a>
+            &nbsp;|&nbsp;
+            <a href="https://maps.app.goo.gl/xfak6Sh4fqyUxmeB9" target="_blank" rel="noopener" class="link-cyan">مشاهده در گوگل مپ</a>
           </div>
         </div>
         <div class="contact-row">
@@ -567,7 +582,7 @@
 </main>
 
 <footer>
-  <div class="logo en">LU<span>M</span>ER</div>
+  <div class="logo en" dir="ltr">LU<span>M</span>ER</div>
   <div>© تمام حقوق برای لومر محفوظ است.</div>
 </footer>
 
@@ -577,6 +592,18 @@
     entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target);} });
   }, {threshold:.15});
   els.forEach(el=>io.observe(el));
+
+  window.addEventListener('scroll', ()=>{
+    document.querySelector('header').classList.toggle('scrolled', window.scrollY > 30);
+  });
+
+  const footerLogo = document.querySelector('footer .logo');
+  if(footerLogo){
+    const io2 = new IntersectionObserver((entries)=>{
+      entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io2.unobserve(e.target);} });
+    }, {threshold:.4});
+    io2.observe(footerLogo);
+  }
 
   window.addEventListener('load', ()=>{
     setTimeout(()=>{
